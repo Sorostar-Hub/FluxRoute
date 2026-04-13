@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: fluxroute
+      POSTGRES_PASSWORD: dev-password
+      POSTGRES_DB: fluxroute_indexer
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U fluxroute']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  soroban-testnet:
+    image: stellar/soroban-preview:latest
+    environment:
+      SOROBAN_NETWORK: testnet
+    ports:
+      - '11626:11626'
+    command: 'stellar --cmd run local-network --volume soroban-data'
+    volumes:
+      - soroban_data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:11626/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  soroban_data:
+
+networks:
+  default:
+    name: fluxroute-network

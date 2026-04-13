@@ -1,0 +1,26 @@
+{
+  "name": "@fluxroute/solver",
+  "version": "0.1.0",
+  "description": "Off-chain solver node for FluxRoute",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^12.0.0",
+    "@fluxroute/sdk": "workspace:*",
+    "zod": "^3.22.0",
+    "prom-client": "^15.0.0",
+    "express": "^4.18.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "ts-node-dev": "^2.0.0",
+    "@types/express": "^4.17.0",
+    "@types/node": "^20.0.0"
+  }
+}

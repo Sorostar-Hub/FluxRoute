@@ -1,0 +1,22 @@
+name: Contract Tests
+
+on:
+  push:
+    paths: ['contracts/**']
+  pull_request:
+    paths: ['contracts/**']
+
+jobs:
+  test-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Install soroban-cli
+        run: cargo install --locked soroban-cli
+      - name: Run contract tests
+        run: cargo test --manifest-path contracts/Cargo.toml
+      - name: Build WASM
+        run: cargo build --manifest-path contracts/Cargo.toml --target wasm32-unknown-unknown --release

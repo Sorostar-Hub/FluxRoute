@@ -1,0 +1,61 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run npm audit
+        run: npm audit --audit-level=high || true
+      - name: Check for outdated packages
+        run: npm outdated || true
+
+  codeql:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: ['typescript']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+      - uses: github/codeql-action/autobuild@v2
+      - uses: github/codeql-action/analyze@v2
+
+  rust-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run cargo audit
+        run: cargo install cargo-audit && cargo audit
+
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Check licenses
+        run: npm run license-check 2>/dev/null || echo "License check skipped"

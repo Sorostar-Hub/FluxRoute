@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'sdk-v*'
+      - 'contract-v*'
+
+jobs:
+  publish-sdk:
+    if: startsWith(github.ref, 'refs/tags/sdk-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build SDK
+        run: npm run build --filter=sdk
+      - name: Publish to npm
+        run: npm publish --workspace packages/sdk
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+
+  build-contracts:
+    if: startsWith(github.ref, 'refs/tags/contract-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Install soroban-cli
+        run: cargo install --locked soroban-cli
+      - name: Build WASM artifacts
+        run: cargo build --manifest-path contracts/Cargo.toml --target wasm32-unknown-unknown --release
+      - name: Upload WASM to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/wasm32-unknown-unknown/release/*.wasm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
