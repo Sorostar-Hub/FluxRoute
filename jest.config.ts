@@ -1,4 +1,5 @@
 import type { Config } from 'jest';
+// @ts-expect-error - jest types resolution
 
 const config: Config = {
   preset: 'ts-jest',

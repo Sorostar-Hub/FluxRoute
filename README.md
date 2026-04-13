@@ -6,9 +6,37 @@ Users express **what** they want — swap, convert, route, pay — and FluxRoute
 
 ---
 
+## 💡 What is FluxRoute?
+
+FluxRoute is a next-generation **intent-based routing protocol** built on Stellar. Instead of manually specifying execution paths across multiple protocols, users describe their intent ("I want to convert 100 USDC to BRL"), and FluxRoute's decentralized solver network competes to find and execute the best route.
+
+### Key Concepts:
+
+- **Intent-Centric**: Users specify outcomes, not execution paths
+- **Cross-Protocol**: Routes through Soroswap, Blend, DeFindex, and Stellar Path Payments
+- **Solver Network**: Off-chain solvers compete to fill intents at the best price
+- **Atomic Settlement**: Soroban smart contracts guarantee all-or-nothing execution
+- **One-Click**: Sign once, execute once — no hop-by-hop approvals
+- **Slippage Protection**: Built-in protection against unfavorable fills
+
+### Architecture Pattern:
+
+FluxRoute follows an **intent-solver-settlement** model:
+1. **Intent** → User expresses desired outcome on-chain
+2. **Solver Competition** → Off-chain nodes bid to fulfill the intent
+3. **Route Optimization** → Best path identified across protocols
+4. **Atomic Settlement** → Soroban contract executes atomically
+5. **Outcome** → User receives desired asset with price protection
+
+---
+
 ## Status
 
-🚧 **This project is under active scaffolding.** Implementation begins once the maintainer role is confirmed via the Stellar Community Fund.
+✅ **Project Successfully Bootstrapped to Industrial Standards**
+
+🚧 **Implementation Phase**: Core contracts and SDK development in progress
+
+📋 **Phase 1 Upcoming**: Foundation layer (Intent Registry, Solver Settlement, SDK)
 
 If you'd like to contribute, watch this repo and check back for `good first issue` labels.
 
@@ -175,9 +203,12 @@ fluxroute/
 │
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml
-│   │   ├── contract-test.yml
-│   │   └── deploy-testnet.yml
+│   │   ├── ci.yml                    # Root lint + test
+│   │   ├── contract-test.yml         # Soroban contract tests
+│   │   ├── frontend.yml              # Frontend CI/CD
+│   │   ├── sdk.yml                   # SDK build + publish
+│   │   ├── security.yml              # Security scanning
+│   │   └── release.yml               # Release & npm publish
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md
 │   │   ├── feature_request.md
@@ -186,6 +217,14 @@ fluxroute/
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── CODE_OF_CONDUCT.md
 │
+├── jest.config.ts                    # Root Jest configuration
+├── .eslintrc.json                    # Monorepo ESLint rules
+├── .commitlintrc.json                # Conventional commits
+├── lint-staged.config.js             # Pre-commit linting
+├── docker-compose.yml                # Local dev environment
+├── .husky/
+│   ├── pre-commit                    # Pre-commit hooks
+│   └── commit-msg                    # Commit message validation
 ├── package.json                      # Root — Turborepo workspaces
 ├── turbo.json
 ├── tsconfig.base.json
@@ -241,6 +280,126 @@ fluxroute/
 - [ ] SDK on npm
 - [ ] Freighter wallet integration
 - [ ] Multi-solver competition & slashing
+
+---
+
+## 📦 Project Bootstrap (Industrial Standards)
+
+This project has been fully bootstrapped to **enterprise-grade development standards**. The following infrastructure is now in place:
+
+### ✅ Configuration Files Added
+
+| Config | Purpose |
+|--------|---------|
+| **`.eslintrc.json`** | Shared ESLint rules for TypeScript, React, Node.js across monorepo |
+| **`jest.config.ts`** | Root Jest configuration with path mappings and coverage thresholds |
+| **`.commitlintrc.json`** | Enforces conventional commit format (feat:, fix:, etc.) |
+| **`lint-staged.config.js`** | Pre-commit linting for staged files |
+| **`docker-compose.yml`** | Local development environment (PostgreSQL, Redis, Soroban testnet) |
+| **`.husky/pre-commit`** | Pre-commit hook running linting & formatting |
+| **`.husky/commit-msg`** | Commit message validation |
+
+### ✅ Workflow Pipeline Added
+
+| Workflow | Trigger | Jobs |
+|----------|---------|------|
+| **`frontend.yml`** | Push/PR to `frontend/**` | Lint → Build → Test → E2E |
+| **`sdk.yml`** | Push/PR to `packages/sdk/**` | Lint → Build → Test → Export validation |
+| **`contract-test.yml`** | Push/PR to `contracts/**` | Cargo test → WASM build |
+| **`security.yml`** | Weekly + each push | npm audit → CodeQL → cargo audit |
+| **`release.yml`** | Tag push (sdk-v*, contract-v*) | SDK npm publish → Contract WASM upload |
+| **`ci.yml`** | Push to main/develop | General lint + typecheck |
+
+### ✅ Development Tooling
+
+**Automated Pre-commit Checks:**
+```bash
+git commit -m "feat: new feature"
+  ↓
+.husky/pre-commit (runs lint-staged)
+  ├─ ESLint --fix on TS/JS files
+  ├─ Prettier on JSON/Markdown/YAML
+  └─ cargo fmt on Rust files
+  ↓
+.husky/commit-msg (runs commitlint)
+  └─ Validates message format
+  ↓
+✅ Commit accepted
+```
+
+**Local Development Stack:**
+```bash
+docker-compose up -d
+  ├─ PostgreSQL 16 (indexer database)
+  ├─ Redis 7 (caching)
+  └─ Soroban Testnet (Stellar local network)
+```
+
+### ✅ Package.json Scripts Added
+
+```bash
+npm run lint                 # Run ESLint across monorepo
+npm run lint:fix            # Auto-fix linting issues
+npm run format:check        # Verify Prettier formatting
+npm run type-check          # TypeScript type checking
+npm run prepare             # Install Husky hooks
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20+
+- Rust 1.75+ (for contracts)
+- Docker & Docker Compose (for local environment)
+
+### Environment Setup
+
+1. **Clone & Install**
+```bash
+git clone https://github.com/your-org/fluxroute.git
+cd fluxroute
+npm install
+npm run prepare  # Install Husky git hooks
+```
+
+2. **Start Local Environment**
+```bash
+docker-compose up -d
+# Starts: PostgreSQL, Redis, Soroban testnet
+```
+
+3. **Development Commands**
+```bash
+# Watch mode for all packages
+npm run dev
+
+# Individual package dev
+npm run dev:frontend
+npm run dev:solver
+npm run dev:indexer
+
+# Testing
+npm run test                 # All tests
+npm run test:contracts      # Soroban contracts only
+npm run test:integration    # Integration tests
+npm run test:e2e            # E2E tests
+
+# Code quality
+npm run lint                 # Check linting
+npm run lint:fix            # Auto-fix issues
+npm run format:check        # Check formatting
+npm run type-check          # TypeScript check
+```
+
+### Git Workflow
+
+1. Create feature branch: `git checkout -b feat/my-feature`
+2. Make changes (pre-commit hooks auto-format code)
+3. Commit with conventional format: `git commit -m "feat: description"`
+4. Push: `git push origin feat/my-feature`
+5. Open PR → Workflows run automatically
 
 ---
 
