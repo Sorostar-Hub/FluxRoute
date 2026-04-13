@@ -14,8 +14,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - run: npm run lint
       - run: npx tsc --noEmit -p packages/sdk/tsconfig.json
       - run: npx tsc --noEmit -p packages/solver/tsconfig.json
@@ -29,7 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - run: npm run build
       - run: npm run test

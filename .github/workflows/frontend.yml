@@ -25,8 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - name: Lint frontend
         run: npm run lint --filter=frontend
       - name: Type-check frontend
@@ -40,8 +39,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - name: Build SDK
         run: npm run build --filter=sdk
       - name: Build frontend
@@ -61,8 +59,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - name: Run frontend tests
         run: npm run test --filter=frontend
       - name: Upload coverage
@@ -81,8 +78,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run E2E tests
