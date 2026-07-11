@@ -19,13 +19,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install stellar-sdk
+        run: pip install stellar-sdk
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
 
       - name: Install stellar-cli
         run: |
-          cargo install --locked stellar-cli --version 21
+          cargo install --locked stellar-cli --features opt --version 26.0.0
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Cache Cargo

@@ -24,11 +24,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
       - name: Lint SDK
-        run: npm run lint --filter=sdk
+        run: pnpm run lint --filter=sdk
       - name: Type-check SDK
-        run: npx tsc --noEmit -p packages/sdk/tsconfig.json
+        run: pnpm exec tsc --noEmit -p packages/sdk/tsconfig.json
 
   build:
     runs-on: ubuntu-latest
@@ -38,9 +39,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
       - name: Build SDK
-        run: npm run build --filter=sdk
+        run: pnpm run build --filter=sdk
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -56,9 +58,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
       - name: Run SDK tests
-        run: npm run test --filter=sdk
+        run: pnpm run test --filter=sdk
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -74,11 +77,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
       - name: Download build
         uses: actions/download-artifact@v4
         with:
           name: sdk-build
           path: packages/sdk/dist
       - name: Test imports
-        run: node -e "const sdk = require('./packages/sdk/dist/index.cjs'); console.log('SDK imported successfully', Object.keys(sdk).length, 'exports')"
+        run: node -e "const sdk = require('./packages/sdk/dist/index.js'); console.log('SDK imported successfully', Object.keys(sdk).length, 'exports')"
