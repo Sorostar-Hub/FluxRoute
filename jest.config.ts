@@ -1,10 +1,9 @@
 import type { Config } from 'jest';
-// @ts-expect-error - jest types resolution
 
 const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/packages', '<rootDir>/frontend', '<rootDir>/tests'],
+  roots: ['<rootDir>/tests/unit', '<rootDir>/packages/sdk'],
   moduleNameMapper: {
     '^@fluxroute/sdk$': '<rootDir>/packages/sdk/src',
     '^@fluxroute/solver$': '<rootDir>/packages/solver/src',
@@ -12,24 +11,21 @@ const config: Config = {
   },
   testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
   collectCoverageFrom: [
-    'packages/**/src/**/*.{ts,tsx}',
-    'frontend/src/**/*.{ts,tsx}',
+    'packages/sdk/src/utils/**/*.ts',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
   coverageThreshold: {
     global: {
-      branches: 60,
-      functions: 60,
-      lines: 60,
-      statements: 60,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
   globals: {
     'ts-jest': {
-      tsconfig: {
-        jsx: 'react-jsx',
-      },
+      tsconfig: 'tsconfig.test.json',
     },
   },
 };

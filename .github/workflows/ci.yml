@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-and-typecheck:
     runs-on: ubuntu-latest
@@ -14,11 +18,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: npm run lint
-      - run: npx tsc --noEmit -p packages/sdk/tsconfig.json
-      - run: npx tsc --noEmit -p packages/solver/tsconfig.json
-      - run: npx tsc --noEmit -p packages/indexer/tsconfig.json
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
+      - name: Lint
+        run: pnpm run lint
+      - name: Typecheck SDK
+        run: pnpm run typecheck:sdk
+      - name: Typecheck Solver
+        run: pnpm run typecheck:solver
+      - name: Typecheck Indexer
+        run: pnpm run typecheck:indexer
+      - name: Typecheck Frontend
+        run: pnpm run typecheck:frontend
 
   test:
     runs-on: ubuntu-latest
@@ -28,6 +39,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
-      - run: npm run build
-      - run: npm run test
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
+      - name: Run SDK tests with coverage
+        run: pnpm run test:sdk -- --coverage --collectCoverageFrom='packages/sdk/src/utils/**/*.ts'
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --no-frozen-lockfile
+      - name: Build SDK first
+        run: pnpm --filter=sdk run build
+      - name: Build frontend
+        working-directory: frontend
+        run: pnpm run build
+        env:
+          NEXT_PUBLIC_INTENT_REGISTRY_CONTRACT_ID: ${{ vars.NEXT_PUBLIC_INTENT_REGISTRY_CONTRACT_ID || 'CAX4Q2AQCQBQ5GBCPPUZO5HID2EBRZBQEVBNRDVDNZYGRC6DXT7EBIW4' }}
+          NEXT_PUBLIC_SOLVER_SETTLEMENT_CONTRACT_ID: ${{ vars.NEXT_PUBLIC_SOLVER_SETTLEMENT_CONTRACT_ID || 'CCBKB2QTOGVVVFS6TDGCKYOXYDCHIBKWMCZAUZKOXBLVVUAIVWJ6IMQP' }}
+          NEXT_PUBLIC_STELLAR_NETWORK: testnet

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "pnpm install --no-frozen-lockfile && cd frontend && npx --package=next -- next build",
+  "outputDirectory": ".next",
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "env": {
+    "NEXT_PUBLIC_STELLAR_NETWORK": "testnet"
+  },
+  "github": {
+    "silent": true
+  }
+}
