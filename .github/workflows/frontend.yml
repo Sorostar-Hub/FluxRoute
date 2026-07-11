@@ -28,7 +28,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Lint frontend
-        run: pnpm run lint --filter=frontend
+        run: pnpm --filter=frontend run lint
       - name: Type-check frontend
         run: pnpm exec tsc --noEmit -p frontend/tsconfig.json
 
@@ -43,9 +43,9 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Build SDK
-        run: pnpm run build --filter=sdk
+        run: pnpm --filter=sdk run build
       - name: Build frontend
-        run: pnpm run build --filter=frontend
+        run: pnpm --filter=frontend run build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -64,7 +64,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Run frontend tests
-        run: pnpm run test --filter=frontend
+        run: pnpm --filter=frontend run test
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:

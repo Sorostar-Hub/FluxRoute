@@ -27,7 +27,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Lint SDK
-        run: pnpm run lint --filter=sdk
+        run: pnpm --filter=sdk run lint
       - name: Type-check SDK
         run: pnpm exec tsc --noEmit -p packages/sdk/tsconfig.json
 
@@ -42,7 +42,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Build SDK
-        run: pnpm run build --filter=sdk
+        run: pnpm --filter=sdk run build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -61,7 +61,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Run SDK tests
-        run: pnpm run test --filter=sdk
+        run: pnpm --filter=sdk run test
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
