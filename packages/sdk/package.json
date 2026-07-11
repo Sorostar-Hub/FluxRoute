@@ -3,16 +3,17 @@
   "version": "0.1.0",
   "description": "TypeScript SDK for FluxRoute — cross-protocol intent aggregation on Stellar",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./src/index.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
       "types": "./src/index.ts"
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --external @stellar/stellar-sdk",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "test": "jest",
     "lint": "eslint src --ext .ts"

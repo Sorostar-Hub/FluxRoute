@@ -50,15 +50,10 @@ jobs:
 
       - name: Deploy contracts
         env:
-          STELLAR_IDENTITY: ${{ secrets.STELLAR_IDENTITY }}
+          TESTNET_SECRET_KEY: ${{ secrets.TESTNET_SECRET_KEY }}
           STELLAR_NETWORK: testnet
           STELLAR_RPC_URL: https://soroban-testnet.stellar.org
-        run: |
-          # The deploy script reads STELLAR_IDENTITY or TESTNET_SECRET_KEY.
-          # For CI, the identity key must be configured as a repository secret
-          # containing the secret key. We pass it as TESTNET_SECRET_KEY.
-          export TESTNET_SECRET_KEY="${{ secrets.TESTNET_SECRET_KEY }}"
-          bash scripts/deploy-contracts.sh
+        run: bash scripts/deploy-contracts.sh
 
       - name: Commit updated contract IDs
         run: |

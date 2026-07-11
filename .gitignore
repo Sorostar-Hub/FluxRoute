@@ -28,6 +28,10 @@ contracts/*/test_snapshots/
 # TypeScript incremental build cache
 *.tsbuildinfo
 
+# Next.js
+.next/
+next-env.d.ts
+
 # OS
 .DS_Store
 Thumbs.db
