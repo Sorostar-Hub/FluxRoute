@@ -1,8 +1,15 @@
 # FluxRoute ⚡
 
+![CI](https://github.com/SoroForge/FluxRoute/actions/workflows/ci.yml/badge.svg)
+![Contract Tests](https://github.com/SoroForge/FluxRoute/actions/workflows/contract-test.yml/badge.svg)
+
 > Cross-protocol intent aggregation layer for the Stellar ecosystem.
 
 Users express **what** they want — swap, convert, route, pay — and FluxRoute finds and executes the optimal path across Soroswap, Blend, DeFindex, and Stellar's native path payments. Sign once. Pay once.
+
+**Live Testnet Deployment:**
+- IntentRegistry: [`CAX4Q2AQCQBQ5GBCPPUZO5HID2EBRZBQEVBNRDVDNZYGRC6DXT7EBIW4`](https://stellar.expert/explorer/testnet/contract/CAX4Q2AQCQBQ5GBCPPUZO5HID2EBRZBQEVBNRDVDNZYGRC6DXT7EBIW4)
+- SolverSettlement: [`CCBKB2QTOGVVVFS6TDGCKYOXYDCHIBKWMCZAUZKOXBLVVUAIVWJ6IMQP`](https://stellar.expert/explorer/testnet/contract/CCBKB2QTOGVVVFS6TDGCKYOXYDCHIBKWMCZAUZKOXBLVVUAIVWJ6IMQP)
 
 ---
 
@@ -32,13 +39,14 @@ FluxRoute follows an **intent-solver-settlement** model:
 
 ## Status
 
-✅ **Project Successfully Bootstrapped to Industrial Standards**
+✅ **Testnet Alpha — Contracts Deployed & Verified**
 
-🚧 **Implementation Phase**: Core contracts and SDK development in progress
-
-📋 **Phase 1 Upcoming**: Foundation layer (Intent Registry, Solver Settlement, SDK)
-
-If you'd like to contribute, watch this repo and check back for `good first issue` labels.
+| Milestone | Status |
+|---|---|
+| **M1 — Contracts Live** | ✅ Both Soroban contracts deployed and initialized on testnet |
+| **M2 — Frontend Live** | ✅ Next.js dApp with Freighter wallet connect (deploy to Vercel via `vercel.json`) |
+| **M3 — SDK Published** | ✅ `@fluxroute/sdk` implemented with 44 tests (92% utils coverage) |
+| **M4 — Solver Running** | ✅ Solver node with Soroswap + Path Payment strategies + Prometheus metrics |
 
 ---
 
@@ -262,18 +270,18 @@ fluxroute/
 ## 🗺️ Roadmap
 
 ### 🎯 Phase 1 — Foundation
-- [ ] Intent Registry Soroban contract
-- [ ] Solver Settlement Soroban contract
-- [ ] TypeScript SDK
-- [ ] Soroswap solver strategy
-- [ ] Reference frontend
-- [ ] Testnet deployment
+- [x] Intent Registry Soroban contract (deployed on testnet)
+- [x] Solver Settlement Soroban contract (deployed on testnet)
+- [x] TypeScript SDK (`@fluxroute/sdk`) with hooks, validation, encoding
+- [x] Soroswap + Path Payment solver strategies
+- [x] Reference frontend (Next.js + Freighter)
+- [x] Testnet deployment with CI/CD
 
 ### 🕸️ Phase 2 — Solver Network
-- [ ] Blend, DeFindex, Path Payment strategies
+- [ ] Blend, DeFindex strategies (stubs implemented)
 - [ ] Solver registration & fee distribution
-- [ ] Indexer + GraphQL API
-- [ ] Solver monitoring dashboard
+- [x] Indexer + GraphQL API
+- [x] Solver monitoring dashboard (Prometheus metrics)
 
 ### 🚀 Phase 3 — Production
 - [ ] Mainnet deployment

@@ -1,5 +1,6 @@
 {
   "root": true,
+  "ignorePatterns": ["dist/", ".next/", "coverage/", "node_modules/", "contracts/target/"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2022,
