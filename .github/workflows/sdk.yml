@@ -61,11 +61,11 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
       - name: Run SDK tests
-        run: pnpm --filter=sdk run test
+        run: pnpm run test:sdk
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/sdk/coverage/lcov.info
+          files: ./coverage/lcov.info
           flags: sdk
           fail_ci_if_error: false
 

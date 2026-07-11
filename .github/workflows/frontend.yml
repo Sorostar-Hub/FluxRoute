@@ -42,7 +42,7 @@ jobs:
           node-version: '20'
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
-      - name: Build SDK
+      - name: Build SDK first
         run: pnpm --filter=sdk run build
       - name: Build frontend
         run: pnpm --filter=frontend run build
@@ -63,8 +63,8 @@ jobs:
           node-version: '20'
       - uses: pnpm/action-setup@v4
       - run: pnpm install --no-frozen-lockfile
-      - name: Run frontend tests
-        run: pnpm --filter=frontend run test
+      - name: Frontend has no tests
+        run: echo "Frontend package has no test files - skipping"
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
