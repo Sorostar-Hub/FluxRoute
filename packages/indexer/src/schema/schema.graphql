@@ -1,0 +1,49 @@
+# FluxRoute indexer GraphQL schema.
+#
+# Consumed by the frontend (SolverFeed component, intent history page) and
+# the SDK's useSolver hook.
+
+type Intent {
+  id: ID!
+  sender: String!
+  recipient: String!
+  inputAsset: JSON!
+  outputAsset: JSON!
+  inputAmount: String!
+  minOutputAmount: String!
+  deadline: String!
+  status: IntentStatus!
+  filledBy: String
+  solverFeeBps: Int!
+  createdAtLedger: Int
+  filledTxHash: String
+}
+
+enum IntentStatus {
+  Open
+  Pending
+  Filled
+  Cancelled
+  Expired
+}
+
+type Solver {
+  address: String!
+  intentsFilledTotal: Int!
+  successRate: Float!
+  isOnline: Boolean!
+}
+
+type Query {
+  intent(id: ID!): Intent
+  recentIntents(limit: Int = 20): [Intent!]!
+  solverStats: [Solver!]!
+}
+
+type Subscription {
+  onIntentCreated: Intent!
+  onIntentFilled(id: ID!): Intent!
+}
+
+# JSON scalar for arbitrary asset payloads.
+scalar JSON
