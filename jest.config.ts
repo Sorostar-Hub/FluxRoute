@@ -1,5 +1,4 @@
 import type { Config } from 'jest';
-// @ts-expect-error - jest types resolution
 
 const config: Config = {
   preset: 'ts-jest',
@@ -27,9 +26,7 @@ const config: Config = {
   },
   globals: {
     'ts-jest': {
-      tsconfig: {
-        jsx: 'react-jsx',
-      },
+      tsconfig: 'tsconfig.test.json',
     },
   },
 };
