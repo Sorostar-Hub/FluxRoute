@@ -1,7 +1,7 @@
 # FluxRoute ⚡
 
-![CI](https://github.com/SoroForge/FluxRoute/actions/workflows/ci.yml/badge.svg)
-![Contract Tests](https://github.com/SoroForge/FluxRoute/actions/workflows/contract-test.yml/badge.svg)
+![CI](https://github.com/Sorostar-Hub/FluxRoute/actions/workflows/ci.yml/badge.svg)
+![Contract Tests](https://github.com/Sorostar-Hub/FluxRoute/actions/workflows/contract-test.yml/badge.svg)
 
 > Cross-protocol intent aggregation layer for the Stellar ecosystem.
 
