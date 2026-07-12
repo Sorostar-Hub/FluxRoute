@@ -3,11 +3,7 @@
  * construction, and asset display utilities.
  */
 
-import {
-  FluxRouteClient,
-  type Signer,
-  NETWORKS,
-} from '@fluxroute/sdk';
+import { FluxRouteClient, type Signer, NETWORKS } from '@fluxroute/sdk';
 
 import {
   INTENT_REGISTRY_CONTRACT_ID,
@@ -15,29 +11,28 @@ import {
   STELLAR_NETWORK,
 } from './constants';
 
-/**
- * Lazy-load Freighter's window API. Returns `null` if Freighter is not
- * installed or we're not in a browser context.
- */
-async function getFreighter(): Promise<{
-  signTransaction: (xdr: string, opts?: Record<string, unknown>) => Promise<string>;
-} | null> {
-  if (typeof window === 'undefined') return null;
-  // Freighter injects `window.freighter` once the extension is installed.
-  const freighter = (window as unknown as Record<string, unknown>).freighter as
-    | {
-        signTransaction: (xdr: string, opts?: Record<string, unknown>) => Promise<string>;
-      }
-    | undefined;
-  return freighter ?? null;
-}
+import * as freighter from '@stellar/freighter-api';
+
+const { signTransaction, isConnected } = freighter;
 
 /** Build a `Signer` backed by the Freighter extension. */
 export async function getFreighterSigner(): Promise<Signer | null> {
-  const freighter = await getFreighter();
-  if (!freighter) return null;
+  if (typeof window === 'undefined') return null;
+
+  // Check if Freighter is available
+  const connected = await isConnected().catch(() => false);
+  if (!connected) return null;
+
   return async (txXdr, networkPassphrase) => {
-    return freighter.signTransaction(txXdr, { networkPassphrase });
+    const result = await signTransaction(txXdr, { networkPassphrase });
+
+    // Handle v6.0.1 API response format
+    if (result.error) {
+      throw new Error(`Transaction signing failed: ${result.error}`);
+    }
+
+    // Return just the signed XDR as expected by the SDK Signer type
+    return result.signedTxXdr;
   };
 }
 

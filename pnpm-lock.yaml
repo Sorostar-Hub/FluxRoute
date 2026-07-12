@@ -65,8 +65,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/sdk
       '@stellar/freighter-api':
-        specifier: ^1.7.0
-        version: 1.7.1
+        specifier: ^6.0.1
+        version: 6.0.1
       next:
         specifier: ^14.2.0
         version: 14.2.35(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1785,10 +1785,10 @@ packages:
         integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==,
       }
 
-  '@stellar/freighter-api@1.7.1':
+  '@stellar/freighter-api@6.0.1':
     resolution:
       {
-        integrity: sha512-XvPO+XgEbkeP0VhP0U1edOkds+rGS28+y8GRGbCVXeZ9ZslbWqRFQoETAdX8IXGuykk2ib/aPokiLc5ZaWYP7w==,
+        integrity: sha512-eqwakEqSg+zoLuPpSbKyrX0pG8DQFzL/J5GtbfuMCmJI+h+oiC9pQ5C6QLc80xopZQKdGt8dUAFCmDMNdAG95w==,
       }
 
   '@stellar/js-xdr@3.1.2':
@@ -6468,6 +6468,14 @@ packages:
       }
     hasBin: true
 
+  semver@7.7.1:
+    resolution:
+      {
+        integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==,
+      }
+    engines: { node: '>=10' }
+    hasBin: true
+
   semver@7.8.5:
     resolution:
       {
@@ -8485,7 +8493,10 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@stellar/freighter-api@1.7.1': {}
+  '@stellar/freighter-api@6.0.1':
+    dependencies:
+      buffer: 6.0.3
+      semver: 7.7.1
 
   '@stellar/js-xdr@3.1.2': {}
 
@@ -11741,6 +11752,8 @@ snapshots:
       loose-envify: 1.4.0
 
   semver@6.3.1: {}
+
+  semver@7.7.1: {}
 
   semver@7.8.5: {}
 
