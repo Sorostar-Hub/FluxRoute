@@ -3,15 +3,11 @@
  */
 
 import { useEffect, useState } from 'react';
-
-interface FreighterWindow {
-  freighter?: {
-    getAddress: () => Promise<{ address: string }>;
-    isConnected: () => Promise<boolean>;
-    connect: () => Promise<{ address: string }>;
-    disconnect: () => Promise<void>;
-  };
-}
+import {
+  isConnected as checkFreighterConnection,
+  getPublicKey,
+  requestAccess,
+} from '@stellar/freighter-api';
 
 export function useWallet(): {
   address: string | null;
@@ -25,34 +21,56 @@ export function useWallet(): {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const freighter = (window as unknown as FreighterWindow).freighter;
-    if (!freighter) return;
-    freighter
-      .getAddress()
-      .then(({ address: addr }) => setAddress(addr))
-      .catch(() => {});
+
+    // Check if already connected and get address
+    checkFreighterConnection()
+      .then((connected) => {
+        if (connected) {
+          return getPublicKey();
+        }
+        return null;
+      })
+      .then((publicKey) => {
+        if (publicKey) {
+          setAddress(publicKey);
+        }
+      })
+      .catch(() => {
+        // Silently fail - user hasn't connected yet
+      });
   }, []);
 
   const connect = async () => {
     try {
       if (typeof window === 'undefined') return;
-      const freighter = (window as unknown as FreighterWindow).freighter;
-      if (!freighter) throw new Error('Freighter wallet not installed');
-      const { address: addr } = await freighter.connect();
-      setAddress(addr);
+
+      // Check if Freighter is installed
+      const connected = await checkFreighterConnection();
+      if (!connected) {
+        throw new Error('Freighter wallet not installed. Please install it from freighter.app');
+      }
+
+      // Request access to the wallet
+      const publicKey = await requestAccess();
+      if (!publicKey) {
+        throw new Error('Failed to get wallet address');
+      }
+
+      setAddress(publicKey);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error(String(err)));
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(new Error(errorMessage));
+      throw err;
     }
   };
 
   const disconnect = async () => {
     try {
-      if (typeof window === 'undefined') return;
-      const freighter = (window as unknown as FreighterWindow).freighter;
-      if (!freighter) return;
-      await freighter.disconnect();
+      // Freighter doesn't have a disconnect method in the API
+      // We just clear the local state
       setAddress(null);
+      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     }
