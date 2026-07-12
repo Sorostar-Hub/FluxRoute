@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import {
   isConnected as checkFreighterConnection,
-  getPublicKey,
+  getAddress,
   requestAccess,
 } from '@stellar/freighter-api';
 
@@ -26,13 +26,13 @@ export function useWallet(): {
     checkFreighterConnection()
       .then((connected) => {
         if (connected) {
-          return getPublicKey();
+          return getAddress();
         }
         return null;
       })
-      .then((publicKey) => {
-        if (publicKey) {
-          setAddress(publicKey);
+      .then((result) => {
+        if (result && result.address) {
+          setAddress(result.address);
         }
       })
       .catch(() => {
@@ -51,12 +51,16 @@ export function useWallet(): {
       }
 
       // Request access to the wallet
-      const publicKey = await requestAccess();
-      if (!publicKey) {
+      const result = await requestAccess();
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      if (!result.address) {
         throw new Error('Failed to get wallet address');
       }
 
-      setAddress(publicKey);
+      setAddress(result.address);
       setError(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
