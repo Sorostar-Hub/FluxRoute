@@ -5,8 +5,8 @@
 import { useEffect, useState } from 'react';
 import {
   isConnected as checkFreighterConnection,
-  getPublicKey,
-  setAllowed,
+  getAddress,
+  requestAccess,
 } from '@stellar/freighter-api';
 
 export function useWallet(): {
@@ -26,13 +26,13 @@ export function useWallet(): {
     checkFreighterConnection()
       .then((connected) => {
         if (connected) {
-          return getPublicKey();
+          return getAddress();
         }
         return null;
       })
-      .then((publicKey) => {
-        if (publicKey) {
-          setAddress(publicKey);
+      .then((result) => {
+        if (result && result.address && !result.error) {
+          setAddress(result.address);
         }
       })
       .catch(() => {
@@ -50,16 +50,17 @@ export function useWallet(): {
         throw new Error('Freighter wallet not installed. Please install it from freighter.app');
       }
 
-      // Set allowed to true to request connection
-      await setAllowed(true);
+      // Request access to the wallet
+      const result = await requestAccess();
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
-      // Get the public key
-      const publicKey = await getPublicKey();
-      if (!publicKey) {
+      if (!result.address) {
         throw new Error('Failed to get wallet address');
       }
 
-      setAddress(publicKey);
+      setAddress(result.address);
       setError(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
@@ -70,10 +71,8 @@ export function useWallet(): {
 
   const disconnect = async () => {
     try {
-      // Set allowed to false to disconnect
-      if (typeof window !== 'undefined') {
-        await setAllowed(false);
-      }
+      // Freighter doesn't have a disconnect method in the API
+      // We just clear the local state
       setAddress(null);
       setError(null);
     } catch (err) {
