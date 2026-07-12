@@ -11,7 +11,9 @@ import {
   STELLAR_NETWORK,
 } from './constants';
 
-import { signTransaction, isConnected } from '@stellar/freighter-api';
+import * as freighter from '@stellar/freighter-api';
+
+const { signTransaction, isConnected } = freighter;
 
 /** Build a `Signer` backed by the Freighter extension. */
 export async function getFreighterSigner(): Promise<Signer | null> {
@@ -22,7 +24,15 @@ export async function getFreighterSigner(): Promise<Signer | null> {
   if (!connected) return null;
 
   return async (txXdr, networkPassphrase) => {
-    return signTransaction(txXdr, { networkPassphrase });
+    const result = await signTransaction(txXdr, { networkPassphrase });
+
+    // Handle v6.0.1 API response format
+    if (result.error) {
+      throw new Error(`Transaction signing failed: ${result.error}`);
+    }
+
+    // Return just the signed XDR as expected by the SDK Signer type
+    return result.signedTxXdr;
   };
 }
 

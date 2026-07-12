@@ -3,11 +3,9 @@
  */
 
 import { useEffect, useState } from 'react';
-import {
-  isConnected as checkFreighterConnection,
-  getAddress,
-  requestAccess,
-} from '@stellar/freighter-api';
+import * as freighter from '@stellar/freighter-api';
+
+const { isConnected: checkFreighterConnection, getAddress, requestAccess } = freighter;
 
 export function useWallet(): {
   address: string | null;
