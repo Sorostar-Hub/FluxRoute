@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd .. && pnpm --filter=sdk run build && cd frontend && pnpm run build",
+  "installCommand": "cd .. && pnpm install --no-frozen-lockfile",
+  "framework": "nextjs",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ../",
+  "functions": {},
+  "regions": ["iad1"]
+}
